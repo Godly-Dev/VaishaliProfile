@@ -1,0 +1,1173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vaishali Gawani's Profile</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Three.js CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+    <style>
+        /* --- CSS VARIABLES & RESET --- */
+        :root {
+            --primary: #2A9D8F; /* Teal */
+            --primary-dark: #21867a;
+            --secondary: #E9F5F9; /* Baby Blue */
+            --accent: #E76F51; /* Warm Accent for contrast */
+            --text-dark: #264653;
+            --text-light: #6c757d;
+            --white: #ffffff;
+            --glass-bg: rgba(255, 255, 255, 0.75);
+            --glass-border: rgba(255, 255, 255, 0.4);
+            --shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            color: var(--text-dark);
+            background-color: var(--secondary);
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        h1, h2, h3, h4 {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 600;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        /* --- THREE.JS BACKGROUND --- */
+        #canvas-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+            background: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%);
+        }
+
+        /* --- UTILITIES --- */
+        .glass {
+            background: var(--glass-bg);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            box-shadow: var(--shadow);
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 3rem;
+            color: var(--primary);
+            position: relative;
+            display: inline-block;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            width: 60px;
+            height: 4px;
+            background: var(--primary);
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-radius: 2px;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        section {
+            padding: 80px 0;
+            min-height: 80vh; /* Ensure sections have height */
+        }
+
+        /* --- NAVIGATION --- */
+        .navbar {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 90%;
+            max-width: 1100px;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            transition: 0.3s;
+        }
+
+        .nav-logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .nav-logo i {
+            margin-right: 8px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 25px;
+            list-style: none;
+        }
+
+        .nav-links li a {
+            font-weight: 500;
+            font-size: 1rem;
+            transition: color 0.3s;
+            position: relative;
+        }
+
+        .nav-links li a:hover, .nav-links li a.active {
+            color: var(--primary);
+        }
+
+        .nav-links li a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            background: var(--primary);
+            bottom: -4px;
+            left: 0;
+            transition: width 0.3s;
+        }
+
+        .nav-links li a:hover::after, .nav-links li a.active::after {
+            width: 100%;
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            font-size: 1.5rem;
+            color: var(--primary);
+            cursor: pointer;
+        }
+
+        /* --- HERO SECTION --- */
+        #hero {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding-top: 80px;
+        }
+
+        .hero-content {
+            max-width: 800px;
+            padding: 40px;
+        }
+
+        .hero-title {
+            font-size: 3.5rem;
+            line-height: 1.2;
+            margin-bottom: 20px;
+        }
+
+        .hero-subtitle {
+            font-size: 1.5rem;
+            color: var(--text-light);
+            margin-bottom: 30px;
+            min-height: 1.6em; /* Prevent layout shift on typing */
+        }
+
+        .typing-cursor {
+            display: inline-block;
+            width: 3px;
+            background-color: var(--primary);
+            animation: blink 1s infinite;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+        }
+
+        .btn {
+            padding: 12px 30px;
+            border-radius: 30px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: var(--white);
+            box-shadow: 0 4px 15px rgba(42, 157, 143, 0.4);
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(42, 157, 143, 0.6);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            border: 2px solid var(--primary);
+            color: var(--primary);
+        }
+
+        .btn-secondary:hover {
+            background: var(--primary);
+            color: var(--white);
+            transform: translateY(-3px);
+        }
+
+        /* --- ABOUT ME --- */
+        .about-content {
+            display: flex;
+            align-items: center;
+            gap: 50px;
+        }
+
+        .about-img-container {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+        }
+
+        .profile-img {
+            width: 300px;
+            height: 300px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 5px solid var(--white);
+            box-shadow: var(--shadow);
+            transition: transform 0.4s ease;
+            background-color: #ddd; /* Placeholder color */
+        }
+
+        .profile-img:hover {
+            transform: scale(1.05) rotate(2deg);
+        }
+
+        .about-text {
+            flex: 1.5;
+            padding: 30px;
+        }
+
+        .about-text h3 {
+            margin-bottom: 15px;
+            color: var(--primary);
+        }
+
+        .about-text p {
+            margin-bottom: 20px;
+            color: var(--text-dark);
+        }
+
+        .soft-skills-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .tag {
+            background: rgba(42, 157, 143, 0.1);
+            color: var(--primary);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        /* --- SKILLS --- */
+        .skills-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 50px;
+        }
+
+        .skill-category h3 {
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* Technical Skills Bars */
+        .skill-bar-wrapper {
+            margin-bottom: 20px;
+        }
+
+        .skill-info {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+
+        .progress-bg {
+            width: 100%;
+            height: 10px;
+            background: #e0e0e0;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--primary);
+            width: 0; /* Animated later */
+            border-radius: 5px;
+            transition: width 1.5s ease-out;
+        }
+
+        /* Soft Skills Cards */
+        .soft-skill-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+
+        .soft-skill-card {
+            padding: 20px;
+            text-align: center;
+            transition: transform 0.3s;
+        }
+
+        .soft-skill-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .soft-skill-card i {
+            font-size: 2rem;
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+
+        /* --- EXPERIENCE TIMELINE --- */
+        .timeline {
+            position: relative;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .timeline::after {
+            content: '';
+            position: absolute;
+            width: 4px;
+            background-color: var(--primary);
+            top: 0;
+            bottom: 0;
+            left: 50%;
+            margin-left: -2px;
+            border-radius: 2px;
+        }
+
+        .timeline-item {
+            padding: 10px 40px;
+            position: relative;
+            background-color: inherit;
+            width: 50%;
+            opacity: 0; /* For animation */
+            transform: translateY(20px);
+            transition: all 0.6s ease;
+        }
+
+        .timeline-item.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .timeline-item.left {
+            left: 0;
+            text-align: right;
+        }
+
+        .timeline-item.right {
+            left: 50%;
+        }
+
+        .timeline-item::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            right: -10px;
+            background-color: var(--white);
+            border: 4px solid var(--accent);
+            top: 20px;
+            border-radius: 50%;
+            z-index: 1;
+        }
+
+        .timeline-item.right::after {
+            left: -10px;
+        }
+
+        .timeline-content {
+            padding: 20px 30px;
+        }
+
+        .timeline-date {
+            color: var(--primary);
+            font-weight: 700;
+            margin-bottom: 5px;
+            display: block;
+        }
+
+        .timeline-title {
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        .timeline-place {
+            color: var(--text-light);
+            font-style: italic;
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        /* --- CONTACT --- */
+        .contact-wrapper {
+            display: grid;
+            grid-template-columns: 1fr 1.5fr;
+            gap: 40px;
+        }
+
+        .contact-info {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .info-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 15px;
+        }
+
+        .info-icon {
+            width: 50px;
+            height: 50px;
+            background: rgba(42, 157, 143, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary);
+            font-size: 1.2rem;
+        }
+
+        .contact-form {
+            padding: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.5);
+            font-family: 'Roboto', sans-serif;
+            transition: border-color 0.3s;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+            background: #fff;
+        }
+
+        textarea.form-control {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        /* --- FOOTER --- */
+        footer {
+            background: var(--primary-dark);
+            color: var(--white);
+            padding: 40px 0 20px;
+            text-align: center;
+            position: relative;
+        }
+
+        .social-icons {
+            margin-bottom: 20px;
+        }
+
+        .social-icons a {
+            color: var(--white);
+            font-size: 1.5rem;
+            margin: 0 10px;
+            transition: transform 0.3s, color 0.3s;
+            display: inline-block;
+        }
+
+        .social-icons a:hover {
+            color: var(--secondary);
+            transform: translateY(-5px);
+        }
+
+        .scroll-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 45px;
+            height: 45px;
+            background: var(--accent);
+            color: var(--white);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            opacity: 0;
+            transition: opacity 0.3s, transform 0.3s;
+            z-index: 999;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+
+        .scroll-top.visible {
+            opacity: 1;
+        }
+
+        .scroll-top:hover {
+            transform: translateY(-5px);
+        }
+
+        /* --- ANIMATIONS --- */
+        .fade-in-section {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+            will-change: opacity, visibility;
+        }
+
+        .fade-in-section.is-visible {
+            opacity: 1;
+            transform: none;
+        }
+
+        /* --- RESPONSIVE --- */
+        @media (max-width: 992px) {
+            .skills-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .navbar {
+                width: 95%;
+                padding: 15px;
+            }
+
+            .nav-links {
+                position: absolute;
+                top: 70px;
+                left: 0;
+                width: 100%;
+                background: var(--white);
+                flex-direction: column;
+                padding: 20px;
+                box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+                border-radius: 10px;
+                display: none;
+                text-align: center;
+            }
+
+            .nav-links.active {
+                display: flex;
+            }
+
+            .mobile-menu-btn {
+                display: block;
+            }
+
+            .hero-title {
+                font-size: 2.5rem;
+            }
+
+            .about-content {
+                flex-direction: column;
+            }
+
+            .contact-wrapper {
+                grid-template-columns: 1fr;
+            }
+
+            /* Timeline Mobile */
+            .timeline::after {
+                left: 31px;
+            }
+            .timeline-item {
+                width: 100%;
+                padding-left: 70px;
+                padding-right: 25px;
+            }
+            .timeline-item::after {
+                left: 21px;
+            }
+            .timeline-item.left {
+                text-align: left;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Three.js Background -->
+    <div id="canvas-container"></div>
+
+    <!-- Navigation -->
+    <nav class="navbar glass">
+        <div class="nav-logo">
+            <i class="fa-solid fa-hospital-user"></i> Vaishali Gawani
+        </div>
+        <ul class="nav-links">
+            <li><a href="#hero" class="active">Home</a></li>
+            <li><a href="#about">About</a></li>
+            <li><a href="#skills">Skills</a></li>
+            <li><a href="#experience">Experience</a></li>
+            <li><a href="#contact">Contact</a></li>
+        </ul>
+        <div class="mobile-menu-btn">
+            <i class="fa-solid fa-bars"></i>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="hero">
+        <div class="hero-content glass fade-in-section">
+            <h1 class="hero-title">Vaishali Gawani</h1>
+            <h2 class="hero-subtitle">I am <span id="typing-text"></span><span class="typing-cursor"></span></h2>
+            <div class="btn-group">
+                <button class="btn btn-primary" onclick="alert('Demo: CV Download Initiated')">
+                    <i class="fa-solid fa-download"></i> Download CV
+                </button>
+                <a href="#contact" class="btn btn-secondary">
+                    <i class="fa-solid fa-envelope"></i> Contact Me
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Me Section -->
+    <section id="about">
+        <div class="container">
+            <h2 class="section-title">About Me</h2>
+            <div class="about-content fade-in-section">
+                <div class="about-img-container">
+                    <!-- Placeholder Image (Medical Theme) -->
+                    <img src="Profile.png" alt="Profile Photo" class="profile-img">
+                </div>
+                <div class="about-text glass">
+                    <h3>Professional Medical Receptionist</h3>
+                    <p>
+                        Hello! I am a dedicated and compassionate Medical Receptionist with over 5 years of experience in high-volume clinical settings. I specialize in patient management, EMR systems, and creating a welcoming environment for patients and staff alike.
+                    </p>
+                    <p>
+                        My goal is to ensure smooth clinic operations while providing empathy and support to every patient who walks through the door. I thrive in fast-paced environments and pride myself on my organizational skills.
+                    </p>
+                    <div class="soft-skills-tags">
+                        <span class="tag">Compassionate</span>
+                        <span class="tag">Organized</span>
+                        <span class="tag">HIPAA Compliant</span>
+                        <span class="tag">Problem Solver</span>
+                        <span class="tag">Bilingual (EN/ES)</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Skills Section -->
+    <section id="skills">
+        <div class="container">
+            <h2 class="section-title">My Skills</h2>
+            <div class="skills-container fade-in-section">
+                
+                <!-- Technical Skills -->
+                <div class="skill-category glass" style="padding: 30px;">
+                    <h3><i class="fa-solid fa-laptop-medical"></i> Technical Skills</h3>
+                    
+                    <div class="skill-bar-wrapper">
+                        <div class="skill-info">
+                            <span>Patient Scheduling</span>
+                            <span>95%</span>
+                        </div>
+                        <div class="progress-bg">
+                            <div class="progress-fill" data-width="95%"></div>
+                        </div>
+                    </div>
+
+                    <div class="skill-bar-wrapper">
+                        <div class="skill-info">
+                            <span>EMR/EHR Systems (Epic, Cerner)</span>
+                            <span>90%</span>
+                        </div>
+                        <div class="progress-bg">
+                            <div class="progress-fill" data-width="90%"></div>
+                        </div>
+                    </div>
+
+                    <div class="skill-bar-wrapper">
+                        <div class="skill-info">
+                            <span>Insurance Verification</span>
+                            <span>85%</span>
+                        </div>
+                        <div class="progress-bg">
+                            <div class="progress-fill" data-width="85%"></div>
+                        </div>
+                    </div>
+
+                    <div class="skill-bar-wrapper">
+                        <div class="skill-info">
+                            <span>Medical Billing Basics</span>
+                            <span>75%</span>
+                        </div>
+                        <div class="progress-bg">
+                            <div class="progress-fill" data-width="75%"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Soft Skills -->
+                <div class="skill-category">
+                    <h3><i class="fa-solid fa-user-nurse"></i> Soft Skills</h3>
+                    <div class="soft-skill-grid">
+                        <div class="soft-skill-card glass">
+                            <i class="fa-solid fa-comments"></i>
+                            <h4>Communication</h4>
+                        </div>
+                        <div class="soft-skill-card glass">
+                            <i class="fa-solid fa-heart-pulse"></i>
+                            <h4>Empathy</h4>
+                        </div>
+                        <div class="soft-skill-card glass">
+                            <i class="fa-solid fa-layer-group"></i>
+                            <h4>Multitasking</h4>
+                        </div>
+                        <div class="soft-skill-card glass">
+                            <i class="fa-solid fa-clock"></i>
+                            <h4>Punctuality</h4>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Experience Section -->
+    <section id="experience">
+        <div class="container">
+            <h2 class="section-title">Experience</h2>
+            <div class="timeline">
+                
+                <div class="timeline-item left">
+                    <div class="timeline-content glass">
+                        <span class="timeline-date">2025 - Present</span>
+                        <h4 class="timeline-title">Senior Medical Receptionist</h4>
+                        <p>Managing front desk operations for a busy cardiology department. Overseeing 3 junior staff, handling complex insurance authorizations, and maintaining patient confidentiality.</p>
+                    </div>
+                </div>
+
+                <div class="timeline-item right">
+                    <div class="timeline-content glass">
+                        <span class="timeline-date">2009 - 2013</span>
+                        <p>Coordinated patient flow, managed appointment calendar using Epic EHR, and handled high-volume phone lines with a focus on patient satisfaction.</p>
+                    </div>
+                </div>
+
+                <div class="timeline-item left">
+                    <div class="timeline-content glass">
+                        <span class="timeline-date">2006 - 2008</span>
+                        <h4 class="timeline-title">Medical Receptionist</h4>
+                        <p>Assisted with patient intake, data entry, and verifying insurance coverage. Ensured the waiting area was clean and welcoming.</p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact">
+        <div class="container">
+            <h2 class="section-title">Get In Touch</h2>
+            <div class="contact-wrapper fade-in-section">
+                
+                <div class="contact-info glass">
+                    <div class="info-item">
+                        <div class="info-icon"><i class="fa-solid fa-envelope"></i></div>
+                        <div>
+                            <h4>Email</h4>
+                            <p>vaishaligawani12@gmail.com</p>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-icon"><i class="fa-solid fa-phone"></i></div>
+                        <div>
+                            <h4>Phone</h4>
+                            <p>+91 8291796998</p>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-icon"><i class="fa-solid fa-location-dot"></i></div>
+                        <div>
+                            <h4>Location</h4>
+                            <p>Mumbai, India</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="contact-form glass">
+                    <form onsubmit="event.preventDefault(); showSuccess();">
+                        <div class="form-group">
+                            <input type="text" class="form-control" placeholder="Your Name" required>
+                        </div>
+                        <div class="form-group">
+                            <input type="email" class="form-control" placeholder="Your Email" required>
+                        </div>
+                        <div class="form-group">
+                            <textarea class="form-control" placeholder="Message" required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center;">
+                            Send Message <i class="fa-solid fa-paper-plane"></i>
+                        </button>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+   <!-- Footer -->
+<footer>
+    <div class="container">
+        <p><strong>Our Mission:</strong> To provide seamless communication, compassionate service, and efficient scheduling for every patient.</p>
+
+        <p>For inquiries, reach us at: <em>vaishaligawani12@gmail.com</em></p>
+
+        <p>&copy; 2025 Rg_Dev. All rights reserved.</p>
+    </div>
+</footer>
+
+
+    <!-- Scroll Up Button -->
+    <div class="scroll-top" onclick="window.scrollTo(0,0)">
+        <i class="fa-solid fa-arrow-up"></i>
+    </div>
+
+    <!-- SCRIPTS -->
+    <script>
+        // --- THREE.JS ANIMATED BACKGROUND ---
+        function initThreeJS() {
+            const container = document.getElementById('canvas-container');
+            const scene = new THREE.Scene();
+            // Fog for depth
+            scene.fog = new THREE.FogExp2(0xf0f5f6, 0.001);
+
+            const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+            
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setPixelRatio(window.devicePixelRatio);
+            container.appendChild(renderer.domElement);
+
+            camera.position.z = 100;
+
+            // Particles - Creating Medical "+" Shapes and Spheres
+            const particles = new THREE.Group();
+            
+            // Material
+            const material = new THREE.MeshBasicMaterial({ 
+                color: 0x2A9D8F, 
+                transparent: true, 
+                opacity: 0.6 
+            });
+
+            // Geometry 1: Spheres
+            const sphereGeo = new THREE.SphereGeometry(1, 8, 8);
+            
+            // Geometry 2: Crosses (simulating medical plus)
+            const boxGeoV = new THREE.BoxGeometry(0.8, 3, 0.8);
+            const boxGeoH = new THREE.BoxGeometry(3, 0.8, 0.8);
+
+            // Generate particles
+            for (let i = 0; i < 60; i++) {
+                // Add Sphere
+                const sphere = new THREE.Mesh(sphereGeo, material);
+                sphere.position.x = (Math.random() - 0.5) * 200;
+                sphere.position.y = (Math.random() - 0.5) * 200;
+                sphere.position.z = (Math.random() - 0.5) * 100;
+                sphere.scale.multiplyScalar(Math.random() * 2 + 0.5);
+                particles.add(sphere);
+
+                // Add Cross
+                const crossGroup = new THREE.Group();
+                const v = new THREE.Mesh(boxGeoV, material);
+                const h = new THREE.Mesh(boxGeoH, material);
+                crossGroup.add(v);
+                crossGroup.add(h);
+                
+                crossGroup.position.x = (Math.random() - 0.5) * 200;
+                crossGroup.position.y = (Math.random() - 0.5) * 200;
+                crossGroup.position.z = (Math.random() - 0.5) * 100;
+                crossGroup.rotation.z = Math.random() * Math.PI;
+                crossGroup.scale.multiplyScalar(Math.random() * 0.8 + 0.3);
+                
+                particles.add(crossGroup);
+            }
+
+            scene.add(particles);
+
+            // Mouse Interaction Variables
+            let mouseX = 0;
+            let mouseY = 0;
+
+            document.addEventListener('mousemove', (event) => {
+                mouseX = event.clientX - window.innerWidth / 2;
+                mouseY = event.clientY - window.innerHeight / 2;
+            });
+
+            // Animation Loop
+            const animate = function () {
+                requestAnimationFrame(animate);
+
+                // Rotate entire group slowly
+                particles.rotation.y += 0.001;
+                particles.rotation.x += 0.0005;
+
+                // Parallax Camera movement
+                camera.position.x += (mouseX * 0.05 - camera.position.x) * 0.05;
+                camera.position.y += (-mouseY * 0.05 - camera.position.y) * 0.05;
+                camera.lookAt(scene.position);
+
+                renderer.render(scene, camera);
+            };
+
+            animate();
+
+            // Handle Resize
+            window.addEventListener('resize', () => {
+                camera.aspect = window.innerWidth / window.innerHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(window.innerWidth, window.innerHeight);
+            });
+        }
+
+        // --- UI & INTERACTION SCRIPTS ---
+
+        // 1. Mobile Menu Toggle
+        const mobileBtn = document.querySelector('.mobile-menu-btn');
+        const navLinks = document.querySelector('.nav-links');
+        
+        mobileBtn.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+        });
+
+        document.querySelectorAll('.nav-links li a').forEach(link => {
+            link.addEventListener('click', () => {
+                navLinks.classList.remove('active');
+            });
+        });
+
+// 2. Typing Effect
+const typingElement = document.getElementById('typing-text');
+const words = ["Professional", "Compassionate", "Organized", "Efficient"];
+
+let wordIndex = 0;
+let charIndex = 0;
+let isDeleting = false;
+let isPaused = false;
+
+function typeEffect() {
+    const currentWord = words[wordIndex];
+
+    // If we are in a pause, just wait
+    if (isPaused) {
+        return setTimeout(typeEffect, 300); 
+    }
+
+    // Typing forward
+    if (!isDeleting) {
+        typingElement.textContent = currentWord.substring(0, charIndex + 1);
+        charIndex++;
+
+        // When the whole word is typed
+        if (charIndex === currentWord.length) {
+            isPaused = true;        // <-- STOP before deleting
+            setTimeout(() => {
+                isPaused = false;
+                isDeleting = true;
+            }, 2000);               // <-- 2 second pause
+        }
+    }
+
+    // Deleting backwards
+    else {
+        typingElement.textContent = currentWord.substring(0, charIndex - 1);
+        charIndex--;
+
+        // When deletion finishes
+        if (charIndex === 0) {
+            isDeleting = false;
+            wordIndex = (wordIndex + 1) % words.length;
+
+            isPaused = true;        // <-- STOP before next word
+            setTimeout(() => {
+                isPaused = false;
+            }, 800);                // <-- Slower transition
+        }
+    }
+
+    // Speeds
+    const typingSpeed = isDeleting ? 150 : 200;
+
+    setTimeout(typeEffect, typingSpeed);
+}
+
+// Start
+typeEffect();
+
+
+        // 3. Scroll Observer for Animations (Fade In, Skills, Timeline)
+        const observerOptions = {
+            threshold: 0.2
+        };
+
+        const observer = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    
+                    // Fade In Sections
+                    if (entry.target.classList.contains('fade-in-section')) {
+                        entry.target.classList.add('is-visible');
+                    }
+
+                    // Animate Skill Bars
+                    if (entry.target.querySelector('.progress-fill')) {
+                        const bars = entry.target.querySelectorAll('.progress-fill');
+                        bars.forEach(bar => {
+                            const width = bar.getAttribute('data-width');
+                            bar.style.width = width;
+                        });
+                    }
+
+                    // Animate Timeline Items (sequentially)
+                    if (entry.target.querySelector('.timeline-item')) {
+                        const items = entry.target.querySelectorAll('.timeline-item');
+                        items.forEach((item, index) => {
+                            setTimeout(() => {
+                                item.classList.add('visible');
+                            }, index * 300);
+                        });
+                    }
+
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+
+        // Target elements
+        document.querySelectorAll('.fade-in-section').forEach(el => observer.observe(el));
+        observer.observe(document.querySelector('.skills-container')); // Specifically for skills
+        observer.observe(document.querySelector('.timeline')); // Specifically for timeline
+
+        // 4. Navbar Highlighting
+        const sections = document.querySelectorAll('section');
+        const navItems = document.querySelectorAll('.nav-links li a');
+
+        window.addEventListener('scroll', () => {
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                if (pageYOffset >= sectionTop - 150) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            navItems.forEach(li => {
+                li.classList.remove('active');
+                if (li.getAttribute('href').includes(current)) {
+                    li.classList.add('active');
+                }
+            });
+
+            // Scroll Top Button
+            const scrollTopBtn = document.querySelector('.scroll-top');
+            if (window.scrollY > 500) {
+                scrollTopBtn.classList.add('visible');
+            } else {
+                scrollTopBtn.classList.remove('visible');
+            }
+        });
+
+        // 5. Dummy Form Success
+        function showSuccess() {
+            const btn = document.querySelector('.contact-form button');
+            const originalText = btn.innerHTML;
+            
+            btn.innerHTML = '<i class="fa-solid fa-check"></i> Message Sent!';
+            btn.style.backgroundColor = "#2A9D8F";
+            
+            setTimeout(() => {
+                btn.innerHTML = originalText;
+                document.querySelector('form').reset();
+            }, 3000);
+        }
+
+        // Initialize Everything
+        window.addEventListener('DOMContentLoaded', () => {
+            initThreeJS();
+            typeEffect();
+        });
+
+    </script>
+</body>
+</html>
